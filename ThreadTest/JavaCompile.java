@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 
 import javafx.application.Application;
@@ -43,17 +44,16 @@ public class JavaCompile extends Application {
 
 		fileText = new TextField(filename.get());
 		filename.bind(fileText.textProperty());
-		
+
 		javaText = new TextArea();
 		javaText.setMinHeight(300);
 		javaText.setText(emptyClass);
-		
-		
+
 		compileButton = new Button("Compile");
 		compileButton.setOnAction(e -> compileCode());
 		runButton = new Button("Run");
 		runButton.setOnAction(e -> runCode());
-		
+
 		buttonGroup = new HBox();
 		buttonGroup.setPadding(new Insets(5, 5, 5, 5));
 		buttonGroup.setSpacing(5);
@@ -98,7 +98,7 @@ public class JavaCompile extends Application {
 		EventsDemo.launch(args);
 	}
 
-	private void compileCode(){
+	private void compileCode() {
 		FileWriter fw;
 		try {
 			defaultFile = new File(filename.get() + ".java");
@@ -106,8 +106,8 @@ public class JavaCompile extends Application {
 			fw.write(javaText.getText());
 			fw.close();
 			Process pro = Runtime.getRuntime().exec(
-					"C:\\Program Files\\Java\\jdk1.8.0_20\\bin\\javac " + filename.get()
-							+ ".java");
+					"M:\\Program Files\\Java\\jdk1.8.0_20\\bin\\javac "
+							+ filename.get() + ".java");
 			printLines(pro.getInputStream());
 			printLines(pro.getErrorStream());
 			pro.waitFor();
@@ -122,7 +122,7 @@ public class JavaCompile extends Application {
 
 	}
 
-	private void runCode() {
+	private void runCode2() {
 		try {
 			Process pro = Runtime.getRuntime().exec("java " + filename.get());
 		} catch (IOException e) {
@@ -133,6 +133,51 @@ public class JavaCompile extends Application {
 		// printLines(pro.getErrorStream());
 		// pro.waitFor();
 		// sSystem.out.println(" exitValue() " + pro.exitValue());
+
+	}
+
+	private void runCode() {
+
+		try {
+			Class<?> c = Class.forName(filename.get());
+//			System.out.println(c);
+			Constructor<?> cons = c.getConstructor();
+//			System.out.println(cons);
+//			System.out.println(c.getSuperclass().getName());
+			if (c.getSuperclass().getName() == "java.lang.Thread") {
+				Thread object = (Thread) cons.newInstance();
+//				System.out.println(object);
+				object.start();
+				object.join();
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+//		ThreadsTest te = new ThreadsTest();
+//		te.start();
 
 	}
 
