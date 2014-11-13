@@ -18,33 +18,79 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
 public class JavaCompile extends Application {
 
 	// Pane
 	private BorderPane borderPane;
-
+	private Pane shapePane;
 	private TextArea javaText;
 	private TextField fileText;
 	private String emptyClass = "";
 	private Button compileButton;
 	private Button runButton;
 	private HBox buttonGroup;
+	private Circle circle, circle2, circle3;
+	private Polygon triangle;
 	Scanner scan;
 	SimpleStringProperty filename = new SimpleStringProperty("JavaCompile");
 	File defaultFile = new File(filename.get() + ".java");
 	FileReader input = null;
 
 	public JavaCompile() {
+		// Create the panes
+				shapePane = new Pane();
 
+				//Create all circles and triangle
+				// Circle
+				circle = new Circle(50);
+				circle.centerXProperty().set(50 + Math.random() * (200));
+				circle.centerYProperty().set(50 + Math.random() * (200));
+				circle.setFill(null);
+				circle.setStroke(Color.BLACK);
+
+				// Circle
+				circle2 = new Circle(50);
+				circle2.centerXProperty().set(50 + Math.random() * (200));
+				circle2.centerYProperty().set(50 + Math.random() * (200));
+				circle2.setFill(null);
+				circle2.setStroke(Color.BLACK);
+
+				// Circle
+				circle3 = new Circle(50);
+				circle3.centerXProperty().set(50 + Math.random() * (200));
+				circle3.centerYProperty().set(50 + Math.random() * (200));
+				circle3.setFill(null);
+				circle3.setStroke(Color.BLACK);
+
+				//Triangle
+				triangle = new Polygon(circle.getCenterX(), circle.getCenterY(),
+						circle2.getCenterX(), circle2.getCenterY(),
+						circle3.getCenterX(), circle3.getCenterY());
+				triangle.setFill(null);
+				triangle.setStroke(Color.BLACK);
+
+				//Add circles and triangle to shape pane
+				shapePane.getChildren().addAll(circle, circle2, circle3, triangle);
+				shapePane.setPrefSize(300, 300);
+				shapePane.setMinSize(300,200);
+				
 		// Create the BorderPane
 		borderPane = new BorderPane();
 
 		fileText = new TextField(filename.get());
 		filename.bind(fileText.textProperty());
-
+		fileText.setMinHeight(10);
+		
 		javaText = new TextArea();
 		javaText.setMinHeight(300);
 		javaText.setText(emptyClass);
@@ -57,8 +103,8 @@ public class JavaCompile extends Application {
 		buttonGroup = new HBox();
 		buttonGroup.setPadding(new Insets(5, 5, 5, 5));
 		buttonGroup.setSpacing(5);
-
 		buttonGroup.getChildren().addAll(compileButton, runButton);
+		buttonGroup.layout();
 
 	}
 
@@ -80,18 +126,29 @@ public class JavaCompile extends Application {
 
 		scan.close();
 		input.close();
-
-		Scene scene = new Scene(borderPane, 350, 350);
+		BorderPane mainPane = new BorderPane();
+		
 		javaText.setText(emptyClass);
-
+		
+		mainPane.setRight(borderPane);
+		mainPane.setCenter(shapePane);
+		mainPane.layout();
+		
+		
 		borderPane.setTop(fileText);
 		borderPane.setCenter(javaText);
 		borderPane.setBottom(buttonGroup);
+		borderPane.layout();
+		
+		Scene scene = new Scene(mainPane);
+
 
 		// Configure and display the stage
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("JavaFX Compiler");
 		primaryStage.show();
+		primaryStage.setMinHeight(primaryStage.getHeight());
+		primaryStage.setMinWidth(primaryStage.getWidth());
 	}
 
 	public static void main(String[] args) {
@@ -106,7 +163,7 @@ public class JavaCompile extends Application {
 			fw.write(javaText.getText());
 			fw.close();
 			Process pro = Runtime.getRuntime().exec(
-					"M:\\Program Files\\Java\\jdk1.8.0_20\\bin\\javac "
+					"C:\\Program Files\\Java\\jdk1.8.0_25\\bin\\javac "
 							+ filename.get() + ".java");
 			printLines(pro.getInputStream());
 			printLines(pro.getErrorStream());
@@ -144,6 +201,13 @@ public class JavaCompile extends Application {
 			Constructor<?> cons = c.getConstructor();
 //			System.out.println(cons);
 //			System.out.println(c.getSuperclass().getName());
+			
+			Object test = new String();
+			if(test.getClass() == String.class){
+			((String)test).charAt(0);
+			String t = (String) test;
+			}
+			
 			if (c.getSuperclass().getName() == "java.lang.Thread") {
 				Thread object = (Thread) cons.newInstance();
 //				System.out.println(object);
