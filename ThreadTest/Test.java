@@ -35,6 +35,7 @@ public class Test extends Application {
 	SimpleStringProperty filename = new SimpleStringProperty("Test");
 	File defaultFile = new File(filename.get() + ".java");
 	FileReader input = null;
+	com.sun.tools.javac.Main javac = new com.sun.tools.javac.Main();
 
 	public Test() {
 
@@ -92,6 +93,7 @@ public class Test extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("JavaFX Compiler");
 		primaryStage.show();
+		
 	}
 
 	public static void main(String[] args) {

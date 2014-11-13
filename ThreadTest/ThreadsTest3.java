@@ -5,6 +5,6 @@ public class ThreadsTest3 extends Thread{
     }
 
     public void run() {
-    	System.out.println("This w35sdgked2!");
+    	System.out.println("This shshdfhworked2!");
     }
 }

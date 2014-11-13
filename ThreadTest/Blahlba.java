@@ -12,7 +12,6 @@ import java.util.Scanner;
 
 import com.sun.tools.javac.Main;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
@@ -31,7 +30,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
-public class JavaCompile extends Application {
+public class Blahlba extends Application {
 
 	// Pane
 	private BorderPane borderPane;
@@ -50,7 +49,7 @@ public class JavaCompile extends Application {
 	FileReader input = null;
 	com.sun.tools.javac.Main javac = new com.sun.tools.javac.Main();
 
-	public JavaCompile() {
+	public Blahlba() {
 		// Create the panes
 				shapePane = new Pane();
 
@@ -134,18 +133,9 @@ public class JavaCompile extends Application {
 		
 		javaText.setText(emptyClass);
 		
-		SimWorld world = new SimWorld();
-		Robot test = new Robot(world);
-		test.goForward();
-		world.setPrefWidth(300);
-		world.setPrefHeight(300);
-		world.setMaxWidth(300);
-		world.setMaxHeight(300);
-		world.layout();
-		world.addRobot(test);
-		
 		mainPane.setRight(borderPane);
-		mainPane.setCenter(world);
+		mainPane.setCenter(shapePane);
+		mainPane.layout();
 		
 		
 		borderPane.setTop(fileText);
@@ -154,17 +144,7 @@ public class JavaCompile extends Application {
 		borderPane.layout();
 		
 		Scene scene = new Scene(mainPane);
-		
-		//Use timer to update SimWorld every frame
-		AnimationTimer timer = new AnimationTimer() {
 
-            @Override
-            public void handle(long now) {
-                world.update(now);
-            }
-
-        };
-        timer.start();
 
 		// Configure and display the stage
 		primaryStage.setScene(scene);
@@ -191,7 +171,14 @@ public class JavaCompile extends Application {
 			String[] options = {"-classpath", System.getProperty("java.class.path"), "-d", 
 					System.getProperty("user.dir"), filename.get() + ".java"};
 			Main.compile(options);
-
+			System.out.println(javac);
+//			Process pro = Runtime.getRuntime().exec(
+//					"C:\\Program Files\\Java\\jdk1.8.0_25\\bin\\javac "
+//							+ filename.get() + ".java");
+//			printLines(pro.getInputStream());
+//			printLines(pro.getErrorStream());
+//			pro.waitFor();
+//			System.out.println(" exitValue() " + pro.exitValue());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -263,5 +250,12 @@ public class JavaCompile extends Application {
 
 	}
 
+	private void printLines(InputStream ins) throws Exception {
+		String line = null;
+		BufferedReader in = new BufferedReader(new InputStreamReader(ins));
+		while ((line = in.readLine()) != null) {
+			System.out.println(line);
+		}
+	}
 
 }
