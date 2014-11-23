@@ -155,7 +155,7 @@ public class Blahlba extends Application {
 	}
 
 	public static void main(String[] args) {
-		EventsDemo.launch(args);
+		Blahlba.launch(args);
 	}
 
 	private void compileCode() {

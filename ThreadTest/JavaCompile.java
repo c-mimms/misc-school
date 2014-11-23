@@ -175,7 +175,7 @@ public class JavaCompile extends Application {
 	}
 
 	public static void main(String[] args) {
-		EventsDemo.launch(args);
+		JavaCompile.launch(args);
 	}
 
 	private void compileCode() {

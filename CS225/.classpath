@@ -2,7 +2,5 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.8.0_20/lib/tools.jar"/>
-	<classpathentry kind="lib" path="M:/Program Files/Java/jdk1.8.0_20/lib/tools.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
