@@ -86,7 +86,7 @@ public class Robot extends Group
 		// mainBody.centerYProperty().subtract(mainBody.radiusProperty()));
 
 		world.getChildren().add(this);
-		System.out.println(this.getBoundsInParent());
+		//System.out.println(this.getBoundsInParent());
 
 		
 		class Delta
@@ -215,7 +215,7 @@ public class Robot extends Group
 
 		if (collide)
 		{
-			System.out.println("Collided");
+			//System.out.println("Collided");
 			rotateRight();
 		}
 		else
