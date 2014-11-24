@@ -5,6 +5,12 @@ public class RobotBrain {
 
 	SimpleDoubleProperty x, y, radius, viewDistance, viewAngle, dir, vel;
 
+	public static final double maxRadius = 300;
+	public static final double maxViewAngle = 360;
+	public static final double maxDir = 360;
+	public static final double maxVel = 100;
+	
+
 	/**
 	 * @param x
 	 * @param y
