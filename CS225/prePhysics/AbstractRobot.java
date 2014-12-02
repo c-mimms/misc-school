@@ -1,3 +1,6 @@
+package prePhysics;
+import RobotBrain;
+
 import java.util.ArrayList;
 
 import javafx.scene.Cursor;
@@ -12,11 +15,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 
-public class Robot extends Group
-{
+public abstract class AbstractRobot extends Group {
 
-	
-	
 	public static int numBots = 0;
 	private int myNum;
 	private SimPanel world;
@@ -29,8 +29,7 @@ public class Robot extends Group
 
 	// public Group body;
 
-	public Robot(SimPanel world, RobotBrain brain)
-	{
+	public AbstractRobot(SimPanel world, RobotBrain brain) {
 		numBots++;
 		myNum = numBots;
 		this.world = world;
@@ -51,7 +50,7 @@ public class Robot extends Group
 				mainBody.centerXProperty().subtract(mainBody.radiusProperty()));
 		bodyBounds.layoutYProperty().bind(
 				mainBody.centerYProperty().subtract(mainBody.radiusProperty()));
-		//bodyBounds.setVisible(false);
+		// bodyBounds.setVisible(false);
 
 		vision = new Arc();
 		vision.radiusXProperty().bind(brain.viewDistance);
@@ -86,187 +85,148 @@ public class Robot extends Group
 		// mainBody.centerYProperty().subtract(mainBody.radiusProperty()));
 
 		world.getChildren().add(this);
-		//System.out.println(this.getBoundsInParent());
+		// System.out.println(this.getBoundsInParent());
 
-		
-		class Delta
-		{
+		class Delta {
 			double x, y;
 		}
 
 		final Delta dragDelta = new Delta();
-		setOnMousePressed(e ->
-		{
+		setOnMousePressed(e -> {
 			// record a delta distance for the drag and drop operation.
 			dragDelta.x = brain.x.get() - e.getSceneX();
 			dragDelta.y = brain.y.get() - e.getSceneY();
 			setCursor(Cursor.MOVE);
 		});
 
-		setOnMouseReleased(e ->
-		{
+		setOnMouseReleased(e -> {
 			setCursor(Cursor.HAND);
 		});
 
-		setOnMouseDragged(e ->
-		{
+		setOnMouseDragged(e -> {
 			brain.x.set(e.getSceneX() + dragDelta.x);
 			brain.y.set(e.getSceneY() + dragDelta.y);
 		});
 
-		setOnMouseEntered(e ->
-		{
+		setOnMouseEntered(e -> {
 			setCursor(Cursor.HAND);
 		});
 
 	}
 
-	public ArrayList<Node> getVisible()
-	{
+	public ArrayList<Node> getVisible() {
 		ArrayList<Node> visible = world.getInBounds(vision.localToScene(vision
 				.getBoundsInLocal()));
 		visible.remove(this);
 
 		ArrayList<Node> remove = new ArrayList<Node>();
-		for (Node bot : visible)
-		{
-			if (bot.getClass() == Robot.class)
-			{
-				Robot tmp = (Robot) bot;
+		for (Node bot : visible) {
+			if (bot.getClass() == AbstractRobot.class) {
+				AbstractRobot tmp = (AbstractRobot) bot;
 				Shape collision = Shape.intersect(tmp.mainBody, this.vision);
-				if (collision.getBoundsInLocal().getWidth() != -1)
-				{
+				if (collision.getBoundsInLocal().getWidth() != -1) {
 					// System.out.println("Vision occured!");
-				}
-				else
-				{
+				} else {
 					// System.out.println(collision);
 					remove.add(bot);
 				}
 			}
 		}
-		for (Node bot : remove)
-		{
+		for (Node bot : remove) {
 			visible.remove(bot);
 		}
 		return visible;
 	}
 
-	
-	public ArrayList<Node> getCollisions()
-	{
+	public ArrayList<Node> getCollisions() {
 
 		ArrayList<Node> remove = new ArrayList<Node>();
-		
-		//System.out.println(bodyBounds.localToParent(bodyBounds.getBoundsInLocal()).getMinY());
-		
-		ArrayList<Node> collisions = world.getInBounds(bodyBounds.localToParent(bodyBounds.getBoundsInLocal()));
+
+		// System.out.println(bodyBounds.localToParent(bodyBounds.getBoundsInLocal()).getMinY());
+
+		ArrayList<Node> collisions = world.getInBounds(bodyBounds
+				.localToParent(bodyBounds.getBoundsInLocal()));
 
 		collisions.remove(this);
 
-		for (Node bot : collisions)
-		{
-			if (bot.getClass() == Robot.class)
-			{
-				Robot tmp = (Robot) bot;
+		for (Node bot : collisions) {
+			if (bot instanceof AbstractRobot) {
+				AbstractRobot tmp = (AbstractRobot) bot;
 				Shape collision = Shape.intersect(tmp.mainBody, this.mainBody);
-				if (collision.getBoundsInLocal().getWidth() != -1)
-				{
-				}
-				else
-				{
+				if (collision.getBoundsInLocal().getHeight() != -1) {
+				} else {
 					remove.add(bot);
 				}
 			}
-			if (bot.getClass() == Rectangle.class)
-			{
+			if (bot.getClass() == Rectangle.class) {
 				Wall tmp = (Wall) bot;
-				Shape collision = Shape.intersect(this.mainBody,tmp);
-				if (collision.getBoundsInLocal().getHeight() != -1)
-				{
-					//world.addShape(collision);
-//					System.out.println(collision.getBoundsInLocal().getWidth());
-//					System.out.println(collision.getBoundsInLocal().getHeight());
-					//System.out.println(tmp);
-				}
-				else
-				{
-//					System.out.println(collision.getBoundsInLocal().getWidth());
-//					System.out.println(collision.getBoundsInLocal().getHeight());
-					//System.out.println(tmp);
-					//remove.add(bot);
+				Shape collision = Shape.intersect(this.mainBody, tmp);
+				if (collision.getBoundsInLocal().getHeight() != -1) {
+					// world.addShape(collision);
+					// System.out.println(collision.getBoundsInLocal().getWidth());
+					// System.out.println(collision.getBoundsInLocal().getHeight());
+					// System.out.println(tmp);
+				} else {
+					// System.out.println(collision.getBoundsInLocal().getWidth());
+					// System.out.println(collision.getBoundsInLocal().getHeight());
+					// System.out.println(tmp);
+					remove.add(bot);
 				}
 			}
 		}
-		for (Node bot : remove)
-		{
+		for (Node bot : remove) {
 			collisions.remove(bot);
 		}
 		return collisions;
 	}
-	
-	public void setColor(Color col){
+
+	public void setColor(Color col) {
 		mainBody.setFill(col);
 	}
 
-	public void update()
-	{
-		
+	public void update() {
 
-		if (collide)
-		{
-			//System.out.println("Collided");
-			rotateRight();
-		}
-		else
-		{
-			moveForward();
+		if (collide) {
+			// System.out.println("Collided");
+			doCollision();
+		} else {
+			doStep();
 		}
 
 		ArrayList<Node> collisions = getCollisions();
 		ArrayList<Node> vision = getVisible();
 
 		// If there are no collisions, we are not colliding with anything
-		if (collisions.size() == 0)
-		{
-			//System.out.println("No collisions");
+		if (collisions.size() == 0) {
+			// System.out.println("No collisions");
 			moveForward(); // Check if moving forward will cause a collision.
 			collisions = getCollisions();
 			if (collisions.size() == 0) // Yay it didnt!
 			{
-				//System.out.println("Still no collisions");
+				// System.out.println("Still no collisions");
 				collide = false;
-			}
-			else
-			{
-				//System.out.println("Now there is collisions");
+			} else {
+				// System.out.println("Now there is collisions");
 				collide = true;
 			}
 			moveBackward(); // Move back
-		}
-		else
-		{
+		} else {
 			moveForward(); // Check if moving forward will fix it.
 			collisions = getCollisions();
 			if (collisions.size() == 0) // Yay it did!
 			{
-				//System.out.println("Fixed forward");
+				// System.out.println("Fixed forward");
 				collide = false;
 				moveBackward();
-			}
-			else
-			{
+			} else {
 				while (collide) // Resolve collisions by moving back until there
 								// are no collisions
 				{
 					collisions = getCollisions();
-					if (collisions.size() == 0)
-					{
-						//System.out.println("Fixed back");
+					if (collisions.size() == 0) {
+						// System.out.println("Fixed back");
 						collide = false;
-					}
-					else
-					{
+					} else {
 						moveBack();
 						// System.out.println(collisions.get(0).getClass());
 					}
@@ -278,20 +238,21 @@ public class Robot extends Group
 
 	}
 
-	private void rotateLeft()
-	{
+	abstract void doStep();
+
+	abstract void doCollision();
+
+	public void rotateLeft() {
 		brain.dir.set(brain.dir.doubleValue() - brain.vel.doubleValue());
 
 	}
 
-	private void rotateRight()
-	{
+	public void rotateRight() {
 		brain.dir.set(brain.dir.doubleValue() + brain.vel.doubleValue());
 
 	}
 
-	private void moveForward()
-	{
+	public void moveForward() {
 		// TODO Auto-generated method stub
 		double xVel = brain.vel.doubleValue()
 				* Math.cos(Math.toRadians(brain.dir.doubleValue()));
@@ -301,8 +262,7 @@ public class Robot extends Group
 		brain.y.set(brain.y.doubleValue() + yVel);
 	}
 
-	private void moveBackward()
-	{
+	public void moveBackward() {
 		// TODO Auto-generated method stub
 		double xVel = -brain.vel.doubleValue()
 				* Math.cos(Math.toRadians(brain.dir.doubleValue()));
@@ -312,8 +272,7 @@ public class Robot extends Group
 		brain.y.set(brain.y.doubleValue() + yVel);
 	}
 
-	private void moveBack()
-	{
+	private void moveBack() {
 		// TODO Auto-generated method stub
 		double xVel = -1 * Math.cos(Math.toRadians(brain.dir.doubleValue()));
 		double yVel = -1 * Math.sin(Math.toRadians(brain.dir.doubleValue()));
@@ -321,8 +280,7 @@ public class Robot extends Group
 		brain.y.set(brain.y.doubleValue() + yVel);
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		return brain.x.doubleValue() + " and " + brain.y.doubleValue();
 	}
 
