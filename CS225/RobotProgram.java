@@ -85,11 +85,17 @@ public class RobotProgram extends Application
 		Button debugButton = new Button("Debug");
 		debugButton.setOnAction(e -> main.toggleDebug());
 
-		Button addButton = new Button("Add Robot");
+		Button addButton = new Button("Add Left Robot");
 		addButton.setOnAction(e -> addRobot());
 
+		Button addButton2 = new Button("Add Right Robot");
+		addButton2.setOnAction(e -> addRobot2());
+		
+		Button addButton3 = new Button("Add Ball");
+		addButton3.setOnAction(e -> addBall());
+
 		borderPane.setTop(new HBox(stepButton, playButton, pauseButton,
-				debugButton, addButton, colorPicker));
+				debugButton, addButton,addButton2,addButton3, colorPicker));
 
 		// Configure and display the stage
 		stage.setScene(scene);
@@ -114,6 +120,14 @@ public class RobotProgram extends Application
 
 	}
 
+	private void addBall() {
+		PhysicsBall ball = new PhysicsBall(main,40);
+		ball.setCenterX(350);
+		ball.setCenterY(450);
+		ball.setFill(colorPicker.getValue());
+		main.getChildren().add(ball);
+	}
+
 	private void clearPanes()
 	{
 		// for(Node tmp : robotInfoPane.getChildren()){
@@ -126,7 +140,7 @@ public class RobotProgram extends Application
 	private void addRobot()
 	{
 		RobotBrain brain = new RobotBrain(450, 350, 50, 50, 30, 0, 1);
-		Robot bot = new Robot(main, brain);
+		AbstractRobot bot = new LeftRobot(main, brain);
 		bot.setColor(colorPicker.getValue());
 		bot.setOnMouseClicked(e ->
 		{
@@ -135,7 +149,19 @@ public class RobotProgram extends Application
 
 	}
 
-	private void populateInfo(Robot bot)
+	private void addRobot2()
+	{
+		RobotBrain brain = new RobotBrain(450, 350, 50, 50, 30, 0, 1);
+		AbstractRobot bot = new RightRobot(main, brain);
+		bot.setColor(colorPicker.getValue());
+		bot.setOnMouseClicked(e ->
+		{
+			populateInfo(bot);
+		});
+
+	}
+
+	private void populateInfo(AbstractRobot bot)
 	{
 		playing = false;
 		// TextField angle = new TextField();

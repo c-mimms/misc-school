@@ -33,7 +33,7 @@ public class SimPanel extends Pane
 		ArrayList<Node> results = new ArrayList<Node>();
 		for (Node bot : children)
 		{
-			if (bot.getClass() == Robot.class || bot.getClass() == Wall.class)
+			if (bot instanceof AbstractRobot || bot instanceof Wall)
 			{
 
 				//System.out.println(bot.getLayoutX() + " " + bot.getBoundsInParent());
@@ -97,7 +97,7 @@ public class SimPanel extends Pane
 			ArrayList<Rectangle> newRects = new ArrayList<Rectangle>();
 			for (Node bot : this.getChildren())
 			{
-				if (bot.getClass() == Robot.class)
+				if (bot instanceof AbstractRobot)
 				{
 					if (debugRects.containsKey(bot))
 					{
@@ -128,9 +128,13 @@ public class SimPanel extends Pane
 
 		for (Node bot : this.getChildren())
 		{
-			if (bot.getClass() == Robot.class)
+			if (bot instanceof AbstractRobot)
 			{
-				((Robot) bot).update();
+				((AbstractRobot) bot).update();
+			}
+			if (bot instanceof PhysicsBall)
+			{
+				((PhysicsBall) bot).update(.1);
 			}
 		}
 	}
