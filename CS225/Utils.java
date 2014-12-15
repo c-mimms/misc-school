@@ -1,16 +1,14 @@
 
 
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.World;
 
-
+/**
+ * Utility class to provide conversions between JavaFX screen coordinates and physics world coordinates.
+ * @author Chris
+ * Collaborator: 
+ * 		This class is a heavily modified version of the Utils class found at 
+ * 				http://thisiswhatiknowabout.blogspot.com/2011/11/hello-world-jbox2d-with-javafx-20.html
+ * 		which was written by Dilip
+ */
 public class Utils {
     
     //Screen width and height
@@ -41,8 +39,6 @@ public class Utils {
     
     
     
-    
-    
 
     //Convert a JavaFX pixel x coordinate to a JBox2D x coordinate
     public static float toPhysX(float posX) {
@@ -66,13 +62,30 @@ public class Utils {
     }
 
     
+    
+    /**
+     * Convert a JavaFX pixel distance to a JBox2D distance.
+     * @param pixelSize
+     * @return
+     */
     public static float pixToPhys(float pixelSize){
     	return pixelSize*100f/WIDTH;
     }
-   
+    public static float pixToPhys(double pixelSize){
+    	return (float)pixelSize*100f/WIDTH;
+    }
+
+    /**
+     * Convert a JBox2d distance to a pixel distance.
+     * @param physSize
+     * @return
+     */
     public static float physToPix(float physSize){
     	return physSize*WIDTH/100f;
     }
-    
+
+    public static float physToPix(double physSize){
+    	return (float)physSize*WIDTH/100f;
+    }
  
 }
